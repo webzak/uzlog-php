@@ -24,7 +24,7 @@ class Log
     public function __construct(Transport $t)
     {
         $this->transport = $t;
-        $this->start = $this->getMicroTime();
+        $this->start = microtime(true);
     }
 
     /**
