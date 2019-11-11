@@ -64,7 +64,7 @@ class Transport
     public function getStatus()
     {
         return [
-            'session' => $this->sessionId,
+            'session' => $this->session,
             'msg' => $this->msgId
         ];
     }
