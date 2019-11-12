@@ -21,6 +21,11 @@ class SocketMock implements SocketInterface
         return ($n < count($this->packets)) ? $this->packets[$n] : null;
     }
 
+    public function getPackets()
+    {
+        return $this->packets;
+    }
+
     public function packetsCount()
     {
         return count($this->packets);
