@@ -2,7 +2,7 @@
 
 namespace Webzak\Uzlog\Test;
 
-use Webzak\Uzlog\{Transport, Log};
+use Webzak\Uzlog\Transport;
 
 class TransportTest extends \PHPUnit\Framework\TestCase
 {
@@ -69,6 +69,38 @@ class TransportTest extends \PHPUnit\Framework\TestCase
         list($pl, $ok) = $this->getPayload($body1 . $body2);
         $this->assertTrue($ok);
         $this->assertEquals($payload, $pl);
+    }
+
+
+    public function testSendMultipleMessages()
+    {
+        $maxbody = 10;
+        $tr = new Transport($this->socket, ['max_packet' => Transport::HEADER_SIZE + $maxbody]);
+        $payload1 = 'hello one';
+        $tr->send($payload1);
+        $payload2 = 'hello two';
+        $tr->send($payload2);
+
+        $status = $tr->getStatus();
+        $this->assertEquals(2, $status['msg']);
+        $this->assertEquals(4, $this->socket->packetsCount());
+
+        $packet = $this->socket->getPacket(0);
+        list($header, $body1) = $this->decodePacket($packet);
+        $packet = $this->socket->getPacket(1);
+        list($header, $body2) = $this->decodePacket($packet);
+        list($pl, $ok) = $this->getPayload($body1 . $body2);
+        $this->assertTrue($ok);
+        $this->assertEquals($payload1, $pl);
+
+        $packet = $this->socket->getPacket(2);
+        list($header, $body1) = $this->decodePacket($packet);
+        $packet = $this->socket->getPacket(3);
+        list($header, $body2) = $this->decodePacket($packet);
+        list($pl, $ok) = $this->getPayload($body1 . $body2);
+        $this->assertTrue($ok);
+        $this->assertEquals($payload2, $pl);
+
     }
 
     /**
