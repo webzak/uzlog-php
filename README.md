@@ -128,3 +128,21 @@ $saver->send('file.txt', 'somestring');
 $saver->send('data.json', $array, ['raw' => true]);
 $saver->send('data.csv',  $row, ['append' => true]);
 ```
+
+
+### Incremental filenames
+
+The saver supports the special naming mode to generate the incremental filnames. This may be necessary when you are saving some data in loop. (The amount of '?' symbols determines the amount of digits).
+
+```php
+foreach($x as $data) {
+    $saver->send('data.???.json', $data);
+}
+```
+
+The results with be saved in files:
+
+-   data.000.json
+-   data.001.json
+
+-   data.nnn.json

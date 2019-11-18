@@ -30,4 +30,9 @@ class SocketMock implements SocketInterface
     {
         return count($this->packets);
     }
+
+    public function clear()
+    {
+        $this->packets = [];
+    }
 }

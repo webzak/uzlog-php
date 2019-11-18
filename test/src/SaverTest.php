@@ -58,6 +58,24 @@ class LogTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(json_encode($data), $payload);
     }
 
+    public function testRotated()
+    {
+        $saver = new Saver($this->tr);
+        $file = 'file.???.txt';
+        $data = 'foo';
+        $saver->send($file, $data);
+        list($header, $fname, $payload) = $this->decode(...$this->socket->getPackets());
+        $this->assertEquals('file.000.txt', $fname);
+        $this->socket->clear();
+        $saver->send($file, $data);
+        list($header, $fname, $payload) = $this->decode(...$this->socket->getPackets());
+        $this->assertEquals('file.001.txt', $fname);
+        $this->socket->clear();
+        $saver->send($file, $data);
+        list($header, $fname, $payload) = $this->decode(...$this->socket->getPackets());
+        $this->assertEquals('file.002.txt', $fname);
+    }
+
     /**
      * @expectedException \Exception
      */
