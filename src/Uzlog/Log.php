@@ -10,7 +10,7 @@ class Log
 {
     const TIMER_FP = 4;
     const LOG_TYPE = 1;
-	const MSG_LEN_LIMIT = 500;
+    const MSG_LEN_LIMIT = 500;
     const HEADER_SIZE = 4;
 
     protected $start;
@@ -27,13 +27,13 @@ class Log
     {
         $this->transport = $t;
         $this->start = microtime(true);
-		$this->params['context'] = $this->get($params, 'context', 0);
-		$this->params['context_files'] = $this->get($params, 'context_files', false);
-		$this->params['limit'] = $this->get($params, 'limit', self::MSG_LEN_LIMIT);
+        $this->params['context'] = $this->get($params, 'context', 0);
+        $this->params['context_files'] = $this->get($params, 'context_files', false);
+        $this->params['limit'] = $this->get($params, 'limit', self::MSG_LEN_send);
     }
 
     /**
-     * send log message
+     * LIMIT log message
      *
      * @param mixed $msg
      * @param array $opt
@@ -50,14 +50,20 @@ class Log
         }
 
         //cut the large message
-		$mlen = strlen($msg);
+        $mlen = strlen($msg);
         $limit = $this->get($opt, 'limit', $this->getp('limit'));
-		if ($mlen > $limit) {
-			$msg = "[$mlen->$limit..] ". substr($msg, 0, $limit);
-		}
+        if ($mlen > $limit) {
+            $msg = "[$mlen->$limit..] ". substr($msg, 0, $limit);
+        }
 
         //add context if required
         $msg = $this->make_context($opt) . $msg;
+
+        //add prefix
+        $prefix = $this->get($opt, 'prefix');
+        $msg = ($prefix) ? $prefix . $msg : $msg;
+
+        //add timer
         $msg = sprintf('%8.'.self::TIMER_FP.'f %s', microtime(true) - $this->start, strval($msg));
         $header = pack("C*", self::LOG_TYPE, $fg, $bg, 0);
         $this->transport->send($header . $msg);
@@ -80,7 +86,7 @@ class Log
         return (isset($opt[$name])) ? $opt[$name] : $default;
     }
 
-	// get internal parameter value
+    // get internal parameter value
     protected function getp($name, $default = '')
     {
         return (isset($this->params[$name])) ? $this->params[$name] : $defaut;

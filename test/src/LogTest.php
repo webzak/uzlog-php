@@ -91,6 +91,16 @@ class LogTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(strpos($body, 'vendor/phpunit/phpunit/src/Framework/TestCase.php') > 0);
     }
 
+    public function testPrefix()
+    {
+        $log = new Log($this->tr);
+        $msg = 'hello one';
+        $log->send($msg, ['prefix' => 'ABC: ']);
+        list($header, $body) = $this->decode(...$this->socket->getPackets());
+        $this->assertEquals('ABC: hello one', $body);
+    }
+
+
     protected function decode(...$packets)
     {
         $data = '';

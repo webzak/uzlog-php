@@ -110,11 +110,14 @@ $saver = new Uzlog\Saver($transport);
 
 -   **context** - overrided the global context parameter for concrete message.
 
+-   **prefix** (string) - add prefix for message. This can be useful when message is a transformed structure.
+
 ```php
 $log->send($msg1);
 $log->send($msg2, ['fg' => 21, 'bg' => 46]);
 $log->send($msg3, ['limit' => 5000, 'context' => true]);
 $log->send($arr, ['transform' => 'json']);
+$log->send($arr, ['prefix' => 'ERR:']);
 ```
 
 
