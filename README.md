@@ -3,14 +3,14 @@
 
 ## Why
 
-I has a need of something to debug the legacy projects with a quite unreadable code and complex data sructures. The idea is it should be very lightweight and have near zero impact on debugged application.
+I had a need of something to debug the legacy projects with a quite unreadable code and complex data sructures. The idea is it should be very lightweight and have near zero impact on debugged application.
 
 
 ## How it works
 
-Is sends the data over UDP protocol to recever: <https://github.com/webzak/uzlog>.
+It sends the data over UDP protocol to recever: <https://github.com/webzak/uzlog>.
 
-The data are sent over UDP without awaiting for any confirmations from the receiver part. It works good on local machine and docker/local networks. I would not recommend to use it with open networks because the information is not encrypted.
+The data are sent over UDP without waiting for any confirmations from the receiver part. It works good on local machine and docker/local networks. I would not recommend to use it with open networks because the information is not encrypted.
 
 
 ## Usage
